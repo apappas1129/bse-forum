@@ -1,11 +1,13 @@
+import { AuthenticationService } from "./../providers/auth.service";
 //import { IQuestion } from './../models/Question';
-import { EditorModalComponent } from './../shared/editor-modal/editor-modal.component';
+import { EditorModalComponent } from "./../shared/editor-modal/editor-modal.component";
 import { QuestionService } from "./../providers/question.service";
 import { Component, OnInit, HostListener } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ModalController } from '@ionic/angular';
-import { Subscription } from "rxjs";
-import { first } from 'rxjs/operators';
+import { ModalController } from "@ionic/angular";
+import { of, Subscription } from "rxjs";
+import { catchError, concatMap, first, tap } from "rxjs/operators";
+import { IQuestion } from "../models/question.model";
 // import {DomSanitizer} from '@angular/platform-browser'
 
 @Component({
@@ -14,42 +16,58 @@ import { first } from 'rxjs/operators';
   styleUrls: ["./question.page.scss"],
 })
 export class QuestionPage implements OnInit {
-  @HostListener("click", ['$event']) onClick(e){
-    console.log("User Click using Host Listener", { target: e.target })
+  @HostListener("click", ["$event"]) onClick(e) {
+    console.log("User Click using Host Listener", { target: e.target });
   }
+  question: IQuestion;
+  private subscription: Subscription;
 
-  // private subscription: Subscription;
+  currentUserAvatar =
+    "https://ionicframework.com/docs/demos/api/list/avatar-yoda.png";
+
   isLoading = true;
-  dummyHtml = `
-  <h1>I am h1</h1>
-  <p>This is the content. And i am not that long but before anything else, Not long ago a longer version among the longest possible long value to be displayed in a long gibberish this is.</p>
-  <h2>This is an h2</h2>
-  <img src="https://gravatar.com/avatar/dba6ba5_c566f943241fb9cd9ada7741?d=identicon&f=y"/>
-  <p>And the second paragraph to add another example.</p>
-  `;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private questionService: QuestionService,
-    public modalController: ModalController
-  ) // private sanitizer: DomSanitizer
-  {
-    //TODO: get question from firestore using the id from params
-    this.route.params
-      .pipe(first())
-      .subscribe(({ id }) => {
-        if (!id) {
-          this.router.navigate(["tab1"]);
-        } else {
-          setTimeout(() => {
+    public authService: AuthenticationService,
+    public questionService: QuestionService,
+    public modalController: ModalController // private sanitizer: DomSanitizer
+  ) {
+    this.route.params.pipe(first()).subscribe(({ id }) => {
+      if (!id) {
+        this.router.navigate(["tabs","tab1"]);
+      } else {
+        this.subscription = this.questionService
+          .get(id)
+          .pipe(
+            catchError((err, caught) => {
+              this.router.navigate(["tabs","tab1"]);
+              return caught;
+            }),
+            concatMap((value, index) =>
+              index === 0
+                ? of(value).pipe(
+                    tap(() => {
+                      if (value) this.isLoading = false;
+                    })
+                  )
+                : of(value)
+            )
+          )
+          .subscribe((response) => {
+            this.question = response;
             this.isLoading = false;
-          }, 500);
-        }
+            console.info("GET QUESTION RESPONSE:", response);
+            // You can check individual fields here and make them glow when updated. Using ng class and settimeout combination
+          });
+      }
+
+      //TODO: fix authentication workflow
+      setTimeout(() => {
+        this.currentUserAvatar = this.authService.currentUser?.avatar;
+      }, 500);
     });
-    //TODO:
-    // 1. Update UI when update action snapshot is captured
-    // 2. Update UI when delete action snapshot is captured
   }
 
   ngOnInit() {}
@@ -60,7 +78,16 @@ export class QuestionPage implements OnInit {
   }
 
   onTagClick(wordId: string) {
-    this.router.navigate(["word",wordId])
+    this.router.navigate(["word", wordId]);
+  }
+
+  upvote() {
+    console.log("upvoting...");
+    this.questionService.upvote(this.question);
+  }
+
+  downvote() {
+    this.questionService.downvote(this.question);
   }
 
   async presentModal() {
@@ -69,14 +96,14 @@ export class QuestionPage implements OnInit {
       // cssClass: 'my-custom-class'
     });
 
-    modal.onDidDismiss().then((data)=> {
-      console.log('ondid', data);
-    })
+    modal.onDidDismiss<IQuestion>().then(({ data }) => {
+      data && this.questionService.insert(data);
+    });
 
     return await modal.present();
   }
 
   ngOnDestroy() {
-    // this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

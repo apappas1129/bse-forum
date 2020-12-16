@@ -17,11 +17,10 @@ export class LanguageService {
   initialize() {
     this.translate.addLangs(this.languages);
 
-    const lang = this.translate.getBrowserLang() || "en";
+    const lang = this.translate.getBrowserLang();
     lang && this.translate.setDefaultLang(lang);
-    console.log('test')
     Storage.get({ key: LANG_KEY }).then(
-      ({ value }) => this.setLanguage(value) || this.setLanguage(lang)
+      ({ value }) => this.setLanguage(value || lang || "en")
     );
   }
 

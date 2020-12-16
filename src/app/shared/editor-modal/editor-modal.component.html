@@ -2,12 +2,19 @@
   <ion-toolbar>
     <ion-title>Compose</ion-title>
     <ion-buttons slot="start">
-      <ion-button color="dark" (click)="dismiss()">
+      <ion-button color="dark" (click)="dismiss(true)">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ckeditor [editor]="Editor" [config]="config" [data]="data"></ckeditor>
+  <ion-item>
+    <ion-label position="stacked">Title</ion-label>
+    <ion-input [(ngModel)]="title" placeholder="What is your question?"></ion-input>
+  </ion-item>
+  <ckeditor [editor]="Editor" [config]="config" [(ngModel)]="body"></ckeditor>
+  <ion-item>
+    <ion-button color="primary" (click)="dismiss()">Submit</ion-button>
+  </ion-item>
 </ion-content>

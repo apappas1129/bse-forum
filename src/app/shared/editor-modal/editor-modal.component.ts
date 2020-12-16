@@ -1,3 +1,4 @@
+import { IQuestion } from "./../../models/question.model";
 import { Component, OnInit } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 
@@ -12,10 +13,13 @@ import { CKEditorConfig } from "../../models/CKEditorConfig";
   styleUrls: ["editor-modal.component.scss"],
 })
 export class EditorModalComponent implements OnInit {
-  data: string;
   public Editor = CustomEditor;
+
+  title: string;
+  body: string = "";
+
   config: CKEditorConfig = {
-    placeholder: "Write your answer here.",
+    placeholder: "Write your long question here.",
     // BUG: Current CKEditor5's generated build does not show the default toolbar as defined in the online builder
     toolbar: [
       "bold",
@@ -36,8 +40,13 @@ export class EditorModalComponent implements OnInit {
 
   constructor(public modalController: ModalController) {}
 
-  dismiss() {
-    this.modalController.dismiss(this.data);
+  dismiss(cancel = false) {
+    cancel && this.modalController.dismiss();
+    const question: IQuestion = {
+      title: this.title,
+      body: this.body,
+    };
+    this.modalController.dismiss(question);
   }
 
   ngOnInit() {}

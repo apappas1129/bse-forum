@@ -8,6 +8,8 @@ import { Router } from "@angular/router";
 import { Plugins } from "@capacitor/core";
 const { App } = Plugins;
 
+import seed from './firebase/seed'
+
 @Component({
   selector: "app-root",
   templateUrl: "app.component.html",
@@ -26,6 +28,9 @@ export class AppComponent {
   }
 
   initializeApp() {
+    // To seed inital data for development, uncomment the following and run it once.
+    // seed();
+
     this.platform.ready().then(() => {
       this.languageService.initialize();
       this.statusBar.styleDefault();

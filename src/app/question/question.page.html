@@ -8,35 +8,35 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="isLoading" class="spinner-container">
+  <div *ngIf="isLoading && !question" class="spinner-container">
     <ion-spinner name="crescent" size="large"></ion-spinner>
   </div>
 
-  <ion-list *ngIf="!isLoading">
+  <ion-list *ngIf="!isLoading && question">
     <!-- Question -->
     <ion-card>
       <ion-card-header>
         <ion-card-title
-          >{{ "What is love? Baby don't hurt me no more." }}</ion-card-title
+          >{{ question.title }}</ion-card-title
         >
         <ion-card-subtitle class="tags-container">
           <!-- <ion-chip *ngFor="let tag of question.tags" > -->
           <ion-chip (click)="onTagClick('123123')">
             <ion-label color="primary">Interface</ion-label>
           </ion-chip>
-          <ion-label style="float: right">Dec. 12, 2020</ion-label>
+          <ion-label style="float: right">{{ question.createdAt || 'Dec. 12, 2020' }}</ion-label>
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <div [innerHTML]="dummyHtml"></div>
+        <div [innerHTML]="question.body"></div>
       </ion-card-content>
       <ion-item>
         <div>
-          <ion-button>
+          <ion-button (click)="upvote()">
             <ion-icon name="arrow-up-outline"></ion-icon>
           </ion-button>
           <span>452</span>
-          <ion-button>
+          <ion-button (click)="downvote()">
             <ion-icon name="arrow-down-outline"></ion-icon>
           </ion-button>
           <a href="#"><ion-icon name="share-social-outline"></ion-icon>Share</a>
@@ -67,7 +67,7 @@
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        <div [innerHTML]="dummyHtml"></div>
+        <div [innerHTML]="question.body"></div>
       </ion-card-content>
       <ion-item>
         <div>
@@ -104,7 +104,7 @@
         <ion-col style="max-width: 54px">
           <ion-avatar class="current-user" size="medium">
             <img
-              [src]="'https://ionicframework.com/docs/demos/api/list/avatar-yoda.png'"
+              [src]="currentUserAvatar"
             />
           </ion-avatar>
         </ion-col>

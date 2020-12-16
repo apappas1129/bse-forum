@@ -11,7 +11,7 @@ import {
   Authentication,
   User,
 } from "@codetrix-studio/capacitor-google-auth/dist/esm/user";
-import { IUser } from '../models/user.model';
+import { IUser } from "../models/user.model";
 const { Storage, GoogleAuth } = Plugins;
 
 const TOKEN_KEY = "my-token";
@@ -25,25 +25,22 @@ export class AuthenticationService {
   token = "";
   currentUser: IUser;
 
-  constructor(
-    private http: HttpClient,
-    public afAuth: AngularFireAuth,
-  ) {
+  constructor(private http: HttpClient, public afAuth: AngularFireAuth) {
     this.loadFirebaseToken();
   }
-  
 
   async loadFirebaseToken() {
-    //const token = await Storage.get({ key: TOKEN_KEY })
+    const data = (await Storage.get({ key: USER_KEY })).value;
+    this.currentUser = JSON.parse(data);
+    this.currentUser && this.isAuthenticated.next(true); //temporarily authenticate user since there's data saved in local storage.
+
     const isAuthenticated = this.isAuthenticated;
     this.afAuth.authState.subscribe(async (firebaseUser) => {
       if (firebaseUser) {
         // User is signed in.
-        const data = (await Storage.get({ key : USER_KEY })).value;
-        this.currentUser = JSON.parse(data);
-        if(this.currentUser && this.currentUser.id === firebaseUser.uid){
+        if (this.currentUser && this.currentUser.id === firebaseUser.uid) {
           isAuthenticated.next(true);
-        }else{
+        } else {
           isAuthenticated.next(false);
         }
       } else {
@@ -97,8 +94,6 @@ export class AuthenticationService {
         this.isAuthenticated.next(false);
       });
     this.isAuthenticated.next(true);
-
-    console.log("EXITED HERE");
 
     return Promise.resolve(true);
   }

@@ -3,7 +3,11 @@
     ion-fab-button {
       display: inline-block;
       transition: all ease-in 200ms;
-      --ripple-color: transparent
+      --ripple-color: transparent;
+    }
+//TODO: selector shadow root
+    .button-native, .button-inner {
+      border-radius: 20px !important; /* fixes deformation on transition*/
     }
 
     .active-tab {

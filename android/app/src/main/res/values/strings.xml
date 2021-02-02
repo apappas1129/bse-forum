@@ -4,4 +4,5 @@
     <string name="title_activity_main">BSE Forum</string>
     <string name="package_name">io.ionic.starter</string>
     <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="server_client_id">759121270965-2u05a24h8clga65ud6gho6ughs5lu8kc.apps.googleusercontent.com</string>
 </resources>

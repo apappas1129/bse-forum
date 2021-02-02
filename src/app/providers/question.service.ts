@@ -1,3 +1,4 @@
+import { AuthenticationService } from './auth.service';
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -13,7 +14,7 @@ import { IQuestion, Question } from "../models/question.model";
 export class QuestionService {
   private collectionReference = this.ngFirestore.collection<IQuestion>("/questions/");
 
-  constructor(private ngFirestore: AngularFirestore) {
+  constructor(private ngFirestore: AngularFirestore, private authService: AuthenticationService,) {
   }
 
   getList() {
@@ -38,7 +39,7 @@ export class QuestionService {
   }
 
   async insert(question: IQuestion): Promise<IQuestion> {
-    const q = new Question(question);
+    const q = new Question(question, this.authService.currentUser);
     const firestoreDoc = this.collectionReference.doc(q.value.id);
     await firestoreDoc.set(q.value);
     // Example only. If you want to fetch data from db after insert.

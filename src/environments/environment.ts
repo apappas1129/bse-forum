@@ -5,14 +5,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyAD74WXvGyhL6rB9QUdquKpG0Ur2BAkUk4",
-    authDomain: "fire-chat-142f4.firebaseapp.com",
-    databaseURL: "https://fire-chat-142f4.firebaseio.com",
-    projectId: "fire-chat-142f4",
-    storageBucket: "fire-chat-142f4.appspot.com",
-    messagingSenderId: "865507949690",
-    appId: "1:865507949690:web:8ab457e35fac27fade4fc3",
-    measurementId: "G-40WRYSTTN5",
+    apiKey: "AIzaSyBegA8g71WdnpxcAiYQ54Jvac90gWVmshw",
+    authDomain: "reactnativedemo-28f3b.firebaseapp.com",
+    databaseURL: "https://reactnativedemo-28f3b.firebaseio.com",
+    projectId: "reactnativedemo-28f3b",
+    storageBucket: "reactnativedemo-28f3b.appspot.com",
+    messagingSenderId: "759121270965",
+    appId: "1:759121270965:web:674115d7f359b0f6b3c6fc"
   },
 };
 

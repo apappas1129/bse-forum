@@ -1,9 +1,32 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-button (click)="login()"> Dummy login </ion-button>
+  <div class="illustration-container">
+    <img
+      src="../../assets/undraw/undraw_online_discussion_5wgl.svg"
+      alt="Login"
+    />
+  </div>
+  <ion-text color="dark">
+    <h2>Fujitsu BSE Forum</h2>
+  </ion-text>
+  <ion-text color="primary">
+    <h4>Sign in</h4>
+  </ion-text>
+  <div class="signin-tray">
+    <ion-button mode="ios" (click)="login()" color="primary">
+      <ion-icon slot="start" name="logo-google"></ion-icon>
+      <ion-text>Sign in with Google</ion-text>
+    </ion-button>
+  </div>
+  <div class="signin-tray">
+    <ion-button class="fb" mode="ios" (click)="login()">
+      <ion-icon slot="start" name="logo-facebook"></ion-icon>
+      <ion-text>Sign in with Facebook</ion-text>
+    </ion-button>
+  </div>
+  <div class="fj container">
+    <img
+      src="../../assets/Fujitsu-Logo.svg"
+      alt="Fujitsu"
+    />
+  </div>
 </ion-content>

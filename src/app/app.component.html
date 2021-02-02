@@ -1,3 +1,17 @@
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>
+
+<div
+  *ngIf="loaderConfig.visible"
+  [class.hide]="loaderConfig.transparent"
+  class="internal-loader"
+>
+<div>
+  <img class="fj" src="../assets/Fujitsu-Logo.svg" />
+  <span class="message">
+    <ion-spinner class="spin" name="crescent" color="primary"></ion-spinner>
+    <ion-text color="primary"><span>loading assets...</span></ion-text>
+  </span>
+</div>
+</div>
